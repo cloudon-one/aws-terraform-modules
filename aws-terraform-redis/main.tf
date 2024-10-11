@@ -16,6 +16,6 @@ resource "aws_elasticache_cluster" "this" {
 
   tags = {
     Name        = var.cluster_id
-    Description = var.description
+    Environment = var.description
   }
 }
