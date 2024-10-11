@@ -1,39 +1,13 @@
-output "vpc_id" {
-  description = "ID of the VPC"
-  value       = module.vpc.vpc_id
-}
-
-output "vpc_arn" {
-  description = "ARN of the VPC"
-  value       = module.vpc.vpc_arn
-}
-
-output "private_subnets" {
-  description = "List of IDs of private subnets"
-  value       = module.vpc.private_subnets
-}
-
-output "public_subnets" {
-  description = "List of IDs of public subnets"
-  value       = module.vpc.public_subnets
-}
-
-output "intra_subnets" {
-  description = "List of IDs of intra subnets"
-  value       = module.vpc.intra_subnets
-}
-
-output "database_subnets" {
-  description = "List of IDs of database subnets"
-  value       = module.vpc.database_subnets
-}
-
-output "elasticache_subnets" {
-  description = "List of IDs of elasticache subnets"
-  value       = module.vpc.elasticache_subnets
-}
-
-output "nat_gateway_ids" {
-  description = "List of NAT Gateway IDs"
-  value       = module.vpc.natgw_ids
+output "vpcs" {
+  description = "Map of VPC details"
+  value = { for k, v in aws_vpc.this : k => {
+    id         = v.id
+    cidr_block = v.cidr_block
+    private_subnet_ids = [for s in aws_subnet.private : s.id if split("-", s.tags.Name)[0] == k]
+    public_subnet_ids  = [for s in aws_subnet.public : s.id if split("-", s.tags.Name)[0] == k]
+    nat_gateway_id     = try(aws_nat_gateway.this[k].id, null)
+    internet_gateway_id = aws_internet_gateway.this[k].id
+    public_route_table_id  = aws_route_table.public[k].id
+    private_route_table_id = aws_route_table.private[k].id
+  } }
 }
