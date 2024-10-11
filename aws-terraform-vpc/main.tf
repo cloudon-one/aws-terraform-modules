@@ -1,9 +1,22 @@
 locals {
-  vpcs = { for v in var.vpcs : v.vpc_name => v }
+  vpc_subnets = flatten([
+    for vpc_key, vpc in var.vpcs : [
+      for subnet_type in ["private", "public"] :
+      [
+        for idx, cidr in vpc["${subnet_type}_subnets"] : {
+          vpc_key     = vpc_key
+          subnet_type = subnet_type
+          cidr        = cidr
+          az          = vpc.azs[idx % length(vpc.azs)]
+          index       = idx
+        }
+      ]
+    ]
+  ])
 }
 
 resource "aws_vpc" "this" {
-  for_each = local.vpcs
+  for_each = { for vpc in var.vpcs : vpc.vpc_name => vpc }
 
   cidr_block           = each.value.vpc_cidr
   enable_dns_hostnames = true
@@ -12,82 +25,49 @@ resource "aws_vpc" "this" {
   tags = merge(
     each.value.tags,
     {
-      Name = each.value.vpc_name
+      Name = each.key
     }
   )
 }
 
-resource "aws_subnet" "private" {
-  for_each = { for i in flatten([
-    for vpc_key, vpc in local.vpcs : [
-      for idx, cidr in vpc.private_subnets : {
-        vpc_key = vpc_key
-        idx     = idx
-        cidr    = cidr
-        az      = vpc.azs[idx]
-      }
-    ]
-  ]) : "${i.vpc_key}-private-${i.idx}" => i }
+resource "aws_subnet" "this" {
+  for_each = { for subnet in local.vpc_subnets : "${subnet.vpc_key}-${subnet.subnet_type}-${subnet.index}" => subnet }
 
   vpc_id            = aws_vpc.this[each.value.vpc_key].id
   cidr_block        = each.value.cidr
   availability_zone = each.value.az
 
   tags = merge(
-    local.vpcs[each.value.vpc_key].tags,
+    var.vpcs[index(var.vpcs.*.vpc_name, each.value.vpc_key)].tags,
     {
-      Name = "${each.value.vpc_key}-private-${each.value.az}"
-    }
-  )
-}
-
-resource "aws_subnet" "public" {
-  for_each = { for i in flatten([
-    for vpc_key, vpc in local.vpcs : [
-      for idx, cidr in vpc.public_subnets : {
-        vpc_key = vpc_key
-        idx     = idx
-        cidr    = cidr
-        az      = vpc.azs[idx]
-      }
-    ]
-  ]) : "${i.vpc_key}-public-${i.idx}" => i }
-
-  vpc_id            = aws_vpc.this[each.value.vpc_key].id
-  cidr_block        = each.value.cidr
-  availability_zone = each.value.az
-
-  tags = merge(
-    local.vpcs[each.value.vpc_key].tags,
-    {
-      Name = "${each.value.vpc_key}-public-${each.value.az}"
+      Name = "${each.value.vpc_key}-${each.value.subnet_type}-${each.value.az}"
     }
   )
 }
 
 resource "aws_internet_gateway" "this" {
-  for_each = local.vpcs
+  for_each = aws_vpc.this
 
-  vpc_id = aws_vpc.this[each.key].id
+  vpc_id = each.value.id
 
   tags = merge(
-    each.value.tags,
+    var.vpcs[index(var.vpcs.*.vpc_name, each.key)].tags,
     {
-      Name = "igw-${each.value.vpc_name}"
+      Name = "igw-${each.key}"
     }
   )
 }
 
 resource "aws_nat_gateway" "this" {
-  for_each = { for k, v in local.vpcs : k => v if v.enable_nat_gateway }
+  for_each = { for vpc in var.vpcs : vpc.vpc_name => vpc if vpc.enable_nat_gateway }
 
   allocation_id = aws_eip.nat[each.key].id
-  subnet_id     = aws_subnet.public["${each.key}-public-0"].id
+  subnet_id     = [for s in aws_subnet.this : s.id if s.tags["Name"] == "${each.key}-public-${each.value.azs[0]}"][0]
 
   tags = merge(
     each.value.tags,
     {
-      Name = "nat-${each.value.vpc_name}"
+      Name = "nat-${each.key}"
     }
   )
 
@@ -95,21 +75,21 @@ resource "aws_nat_gateway" "this" {
 }
 
 resource "aws_eip" "nat" {
-  for_each = { for k, v in local.vpcs : k => v if v.enable_nat_gateway }
+  for_each = { for vpc in var.vpcs : vpc.vpc_name => vpc if vpc.enable_nat_gateway }
   domain   = "vpc"
 
   tags = merge(
     each.value.tags,
     {
-      Name = "eip-${each.value.vpc_name}-nat"
+      Name = "eip-${each.key}-nat"
     }
   )
 }
 
 resource "aws_route_table" "public" {
-  for_each = local.vpcs
+  for_each = aws_vpc.this
 
-  vpc_id = aws_vpc.this[each.key].id
+  vpc_id = each.value.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -117,20 +97,20 @@ resource "aws_route_table" "public" {
   }
 
   tags = merge(
-    each.value.tags,
+    var.vpcs[index(var.vpcs.*.vpc_name, each.key)].tags,
     {
-      Name = "rt-${each.value.vpc_name}-public"
+      Name = "rt-${each.key}-public"
     }
   )
 }
 
 resource "aws_route_table" "private" {
-  for_each = local.vpcs
+  for_each = aws_vpc.this
 
-  vpc_id = aws_vpc.this[each.key].id
+  vpc_id = each.value.id
 
   dynamic "route" {
-    for_each = each.value.enable_nat_gateway ? [1] : []
+    for_each = var.vpcs[index(var.vpcs.*.vpc_name, each.key)].enable_nat_gateway ? [1] : []
     content {
       cidr_block     = "0.0.0.0/0"
       nat_gateway_id = aws_nat_gateway.this[each.key].id
@@ -138,37 +118,23 @@ resource "aws_route_table" "private" {
   }
 
   tags = merge(
-    each.value.tags,
+    var.vpcs[index(var.vpcs.*.vpc_name, each.key)].tags,
     {
-      Name = "rt-${each.value.vpc_name}-private"
+      Name = "rt-${each.key}-private"
     }
   )
 }
 
 resource "aws_route_table_association" "private" {
-  for_each = { for i in flatten([
-    for vpc_key, vpc in local.vpcs : [
-      for idx, _ in vpc.private_subnets : {
-        vpc_key  = vpc_key
-        subnet_id = aws_subnet.private["${vpc_key}-private-${idx}"].id
-      }
-    ]
-  ]) : "${i.vpc_key}-private-${i.subnet_id}" => i }
+  for_each = { for subnet in local.vpc_subnets : "${subnet.vpc_key}-${subnet.subnet_type}-${subnet.index}" => subnet if subnet.subnet_type == "private" }
 
-  subnet_id      = each.value.subnet_id
+  subnet_id      = aws_subnet.this[each.key].id
   route_table_id = aws_route_table.private[each.value.vpc_key].id
 }
 
 resource "aws_route_table_association" "public" {
-  for_each = { for i in flatten([
-    for vpc_key, vpc in local.vpcs : [
-      for idx, _ in vpc.public_subnets : {
-        vpc_key  = vpc_key
-        subnet_id = aws_subnet.public["${vpc_key}-public-${idx}"].id
-      }
-    ]
-  ]) : "${i.vpc_key}-public-${i.subnet_id}" => i }
+  for_each = { for subnet in local.vpc_subnets : "${subnet.vpc_key}-${subnet.subnet_type}-${subnet.index}" => subnet if subnet.subnet_type == "public" }
 
-  subnet_id      = each.value.subnet_id
+  subnet_id      = aws_subnet.this[each.key].id
   route_table_id = aws_route_table.public[each.value.vpc_key].id
 }
