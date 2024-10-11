@@ -6,9 +6,9 @@ resource "aws_ec2_transit_gateway" "this" {
 }
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
-  subnet_ids         = var.vpc_attachments[0].subnet_ids
+  subnet_ids         = var.vpc_attachments[*].subnet_ids
   transit_gateway_id = aws_ec2_transit_gateway.this.id
-  vpc_id             = var.vpc_attachments[0].vpc_id
+  vpc_id             = var.vpc_attachments[*].vpc_id
   tags = {
     Name = "${var.name}-attachment"
   }
