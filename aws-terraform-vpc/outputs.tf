@@ -37,3 +37,9 @@ output "nat_gateway_ids" {
   description = "List of NAT Gateway IDs"
   value       = module.vpc.natgw_ids
 }
+
+output "redis_sg_id" {
+  description = "ID of the security group"
+  value       = aws_vpc_security_group_ingress_rule.allow_redis_ingress.id
+  
+}
