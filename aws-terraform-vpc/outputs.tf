@@ -33,6 +33,12 @@ output "elasticache_subnets" {
   value       = module.vpc.elasticache_subnets
 }
 
+output "elasticache_subnet_group_name" {
+  description = "Name of the elasticache subnet group"
+  value       = module.vpc.elasticache_subnet_group_name
+  
+}
+
 output "nat_gateway_ids" {
   description = "List of NAT Gateway IDs"
   value       = module.vpc.natgw_ids
