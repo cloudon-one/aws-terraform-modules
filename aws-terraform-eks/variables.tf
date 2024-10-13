@@ -3,10 +3,9 @@ variable "cluster_name" {
   description = "Name of the EKS cluster"
 }
 
-variable "eks_version" {
+variable "version" {
   type        = string
   description = "Kubernetes version"
-  default = "1.31"
 }
 
 variable "vpc_id" {
@@ -51,8 +50,6 @@ variable "eks_managed_node_groups" {
     capacity_type  = string
     access_entries = list(object({
       principal          = string
-      type               = string
-      access_policies    = list(string)
       kubernetes_groups  = list(string)
     }))
     tags           = map(string)

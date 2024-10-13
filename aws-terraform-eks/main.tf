@@ -1,7 +1,7 @@
 resource "aws_eks_cluster" "this" {
   name     = var.cluster_name
   role_arn = var.iam_role_arn
-  version  = var.eks_version
+  version  = var.version
 
   vpc_config {
     subnet_ids                        = var.subnet_ids
@@ -32,17 +32,35 @@ resource "aws_eks_node_group" "this" {
   tags = merge(var.tags, var.eks_managed_node_groups[count.index].tags)
 }
 
-resource "aws_eks_access_entry" "this" {
-  count            = length(var.eks_managed_node_groups[0].access_entries)
-  cluster_name     = aws_eks_cluster.this.name
-  principal_arn    = var.eks_managed_node_groups[0].access_entries[count.index].principal
-  type             = var.eks_managed_node_groups[0].access_entries[count.index].type
-  kubernetes_groups = var.eks_managed_node_groups[0].access_entries[count.index].kubernetes_groups
-
-  dynamic "access_policy" {
-    for_each = var.eks_managed_node_groups[0].access_entries[count.index].access_policies
-    content {
-      policy_arn = "arn:aws:eks::aws:policy/${access_policy.value}"
-    }
+resource "kubernetes_config_map_v1_data" "aws_auth" {
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
   }
+
+  data = {
+    mapRoles = yamlencode(
+      concat(
+        [
+          {
+            rolearn  = var.iam_role_arn
+            username = "system:node:{{EC2PrivateDNSName}}"
+            groups   = ["system:bootstrappers", "system:nodes"]
+          }
+        ],
+        [
+          for access_entry in var.eks_managed_node_groups[0].access_entries :
+          {
+            rolearn  = access_entry.principal
+            username = "admin:{{SessionName}}"
+            groups   = access_entry.kubernetes_groups
+          }
+        ]
+      )
+    )
+  }
+
+  force = true
+
+  depends_on = [aws_eks_cluster.this]
 }
