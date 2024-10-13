@@ -22,6 +22,16 @@ module "vpc" {
   tags = var.tags
 }
 
+resource "aws_security_group" "allow_redis_ingress" {
+  name        = "allow_redis_ingress"
+  description = "Allow redis inbound traffic"
+  vpc_id      = module.vpc.vpc_id
+
+
+  tags = {
+    Name = "allow_redis_ingress"
+  }
+}
 resource "aws_vpc_security_group_ingress_rule" "allow_redis_ingress" {
   security_group_id = aws_security_group.allow_redis_ingress.id
   cidr_ipv4         = module.vpc.vpc_cidr_block
