@@ -6,6 +6,7 @@ variable "cluster_id" {
 variable "description" {
   description = "Description of the ElastiCache cluster"
   type        = string
+  default = "Managed by Terraform"
 }
 
 variable "engine_version" {
