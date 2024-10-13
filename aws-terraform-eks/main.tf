@@ -1,91 +1,66 @@
-terraform {
-  required_version = ">= 0.13"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 3.0"
-    }
-  }
-}
-
 resource "aws_eks_cluster" "this" {
-  count = length(var.clusters)
-  
-  name     = var.clusters[count.index].cluster_name
-  role_arn = var.clusters[count.index].iam_role_arn
-  version  = var.clusters[count.index].version
+  name     = var.cluster_name
+  role_arn = var.iam_role_arn
+  version  = var.eks_version
 
   vpc_config {
-    subnet_ids = var.clusters[count.index].subnet_ids
-    endpoint_public_access = var.clusters[count.index].cluster_endpoint_public_access
-    security_group_ids = var.clusters[count.index].cluster_additional_security_group_ids
+    subnet_ids                        = var.subnet_ids
+    endpoint_public_access            = var.cluster_endpoint_public_access
+    security_group_ids                = var.cluster_additional_security_group_ids
   }
 
-  tags = var.clusters[count.index].tags
+  tags = var.tags
 }
 
 resource "aws_eks_node_group" "this" {
-  count = length(var.clusters)
-
-  cluster_name    = aws_eks_cluster.this[count.index].name
-  node_group_name = var.clusters[count.index].eks_managed_node_groups[0].name
-  node_role_arn   = var.clusters[count.index].iam_role_arn
-  subnet_ids      = var.clusters[count.index].subnet_ids
+  count           = length(var.eks_managed_node_groups)
+  cluster_name    = aws_eks_cluster.this.name
+  node_group_name = var.eks_managed_node_groups[count.index].name
+  node_role_arn   = var.iam_role_arn
+  subnet_ids      = var.subnet_ids
 
   scaling_config {
-    desired_size = var.clusters[count.index].eks_managed_node_groups[0].desired_size
-    max_size     = var.clusters[count.index].eks_managed_node_groups[0].max_size
-    min_size     = var.clusters[count.index].eks_managed_node_groups[0].min_size
+    desired_size = var.eks_managed_node_groups[count.index].desired_size
+    max_size     = var.eks_managed_node_groups[count.index].max_size
+    min_size     = var.eks_managed_node_groups[count.index].min_size
   }
 
-  instance_types = var.clusters[count.index].eks_managed_node_groups[0].instance_types
-  capacity_type  = var.clusters[count.index].eks_managed_node_groups[0].capacity_type
-  ami_type       = var.clusters[count.index].eks_managed_node_groups[0].ami_type
+  instance_types = var.eks_managed_node_groups[count.index].instance_types
+  ami_type       = var.eks_managed_node_groups[count.index].ami_type
+  capacity_type  = var.eks_managed_node_groups[count.index].capacity_type
 
-  tags = var.clusters[count.index].tags
+  tags = merge(var.tags, var.eks_managed_node_groups[count.index].tags)
 }
 
-resource "aws_eks_access_entry" "this" {
-  for_each = {
-    for entry in flatten([
-      for cluster_index, cluster in var.clusters : [
-        for access_entry in coalesce(cluster.access_entries, []) : {
-          cluster_index = cluster_index
-          cluster_name  = cluster.cluster_name
-          principal     = access_entry.principal
-          type          = access_entry.type
-          policies      = coalesce(access_entry.access_policies, [])
-        }
-      ]
-    ]) : "${entry.cluster_name}-${entry.principal}" => entry
+resource "kubernetes_config_map_v1_data" "aws_auth" {
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
   }
 
-  cluster_name  = aws_eks_cluster.this[each.value.cluster_index].name
-  principal_arn = each.value.principal
-  type          = each.value.type
-}
-
-resource "aws_eks_access_policy_association" "this" {
-  for_each = {
-    for entry in flatten([
-      for cluster_index, cluster in var.clusters : [
-        for access_entry in coalesce(cluster.access_entries, []) : [
-          for policy in coalesce(access_entry.access_policies, []) : {
-            cluster_index = cluster_index
-            cluster_name  = cluster.cluster_name
-            principal     = access_entry.principal
-            policy        = policy
+  data = {
+    mapRoles = yamlencode(
+      concat(
+        [
+          {
+            rolearn  = var.iam_role_arn
+            username = "system:node:{{EC2PrivateDNSName}}"
+            groups   = ["system:bootstrappers", "system:nodes"]
+          }
+        ],
+        [
+          for access_entry in var.eks_managed_node_groups[0].access_entries :
+          {
+            rolearn  = access_entry.principal
+            username = "admin:{{SessionName}}"
+            groups   = access_entry.kubernetes_groups
           }
         ]
-      ]
-    ]) : "${entry.cluster_name}-${entry.principal}-${entry.policy}" => entry
+      )
+    )
   }
 
-  cluster_name  = aws_eks_cluster.this[each.value.cluster_index].name
-  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/${each.value.policy}"
-  principal_arn = each.value.principal
+  force = true
 
-  access_scope {
-    type = "cluster"
-  }
+  depends_on = [aws_eks_cluster.this]
 }
