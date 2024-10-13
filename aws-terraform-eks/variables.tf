@@ -3,7 +3,7 @@ variable "cluster_name" {
   description = "Name of the EKS cluster"
 }
 
-variable "version" {
+variable "eks_version" {
   type        = string
   description = "Kubernetes version"
   default = "1.31"
