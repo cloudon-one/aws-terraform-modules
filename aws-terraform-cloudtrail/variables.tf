@@ -145,11 +145,6 @@ variable "delimiter" {
   default = null  
 }
 
-#variable "descriptor_formats" {
-#  type = any
-#  description = {}
-#}
-
 variable "enabled" {
   type = bool
   description = "Set to false to prevent the module from creating any resources"
