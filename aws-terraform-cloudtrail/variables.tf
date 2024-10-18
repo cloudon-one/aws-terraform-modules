@@ -145,10 +145,10 @@ variable "delimiter" {
   default = null  
 }
 
-variable "descriptor_formats" {
-  type = any
-  description = {}
-}
+#variable "descriptor_formats" {
+#  type = any
+#  description = {}
+#}
 
 variable "enabled" {
   type = bool
