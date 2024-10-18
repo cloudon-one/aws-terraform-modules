@@ -12,7 +12,7 @@ variable "is_multi_region_trail" {
 
 variable "include_global_service_events" {
   type        = bool
-  default     = false
+  default     = true
   description = "Specifies whether the trail is publishing events from global services such as IAM to the log files"
 }
 
@@ -89,7 +89,7 @@ variable "kms_key_arn" {
 
 variable "is_organization_trail" {
   type        = bool
-  default     = false
+  default     = true
   description = "The trail is an AWS Organizations trail"
 }
 
