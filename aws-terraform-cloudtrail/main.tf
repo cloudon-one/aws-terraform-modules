@@ -9,7 +9,6 @@ module "cloudtrail" {
   cloud_watch_logs_role_arn = var.cloud_watch_logs_role_arn
   context = var.context
   delimiter = var.delimiter
-  descriptor_formats  = var.descriptor_formats
   enable_log_file_validation  = var.enable_log_file_validation
   enable_logging = var.enable_logging
   enabled = var.enabled
