@@ -1,6 +1,6 @@
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.13.0"
+  version = "5.13.0"
 
   for_each = { for idx, vpc in var.vpc_configs : vpc.vpc_name => vpc }
 
