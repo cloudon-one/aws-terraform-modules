@@ -44,7 +44,7 @@ This repository contains a comprehensive collection of reusable Terraform module
 Each module follows a consistent structure:
 ```
 module-name/
-├── README.md         # Module documentation
+├── README.md        # Module documentation
 ├── main.tf          # Main module logic
 ├── variables.tf     # Input variables
 ├── outputs.tf       # Output values
@@ -57,7 +57,7 @@ Each module can be used by referencing it in your Terraform configuration:
 
 ```hcl
 module "example" {
-  source = "github.com/your-org/repo//module-name"
+  source = "git::https://git@github.com/cloudon-one/aws-terraform-modules.git//aws-terraform-<service>?ref=main"
   
   # Module specific variables
   # ...
@@ -80,7 +80,8 @@ module "example" {
 
 ## License
 
-This project is licensed under the terms specified in the [LICENSE](LICENSE) file.
+This project is licensed under the MIT License - see the LICENSE file for details.
+
 
 ## Support
 
