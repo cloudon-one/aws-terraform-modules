@@ -57,7 +57,7 @@ Each module can be used by referencing it in your Terraform configuration:
 
 ```hcl
 module "example" {
-  source = "github.com/your-org/repo//module-name"
+  source = "github.com/cloudon-one/aws-terraform-modules.git//module-name?ref?=main"
   
   # Module specific variables
   # ...
