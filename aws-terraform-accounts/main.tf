@@ -1,8 +1,3 @@
-
-resource "aws_organizations_organization" "org" {
-  feature_set = var.organization.feature_set
-}
-
 # Create Organizational Units
 resource "aws_organizations_organizational_unit" "ous" {
   for_each  = { for ou in var.org_units : ou.name => ou }
