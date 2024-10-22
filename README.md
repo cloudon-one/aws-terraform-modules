@@ -44,7 +44,7 @@ This repository contains a comprehensive collection of reusable Terraform module
 Each module follows a consistent structure:
 ```
 module-name/
-├── README.md         # Module documentation
+├── README.md        # Module documentation
 ├── main.tf          # Main module logic
 ├── variables.tf     # Input variables
 ├── outputs.tf       # Output values
@@ -80,7 +80,8 @@ module "example" {
 
 ## License
 
-This project is licensed under the terms specified in the [LICENSE](LICENSE) file.
+This project is licensed under the MIT License - see the LICENSE file for details.
+
 
 ## Support
 
