@@ -1,6 +1,6 @@
 variable "policies" {
-  description = "Map of SCP policies to deploy. Each policy should contain name, description, content, and target_ids"
-  type = map(object({
+  description = "List of SCP policies to deploy. Each policy should contain name, description, content path, and target_ids"
+  type = list(object({
     name        = string
     description = string
     content     = string

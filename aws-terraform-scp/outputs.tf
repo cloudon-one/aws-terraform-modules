@@ -13,11 +13,12 @@ output "policy_arns" {
 }
 
 output "attachments" {
-  description = "Map of policy attachments"
-  value = {
-    for key, attachment in aws_organizations_policy_attachment.attach : key => {
-      policy_id = attachment.policy_id
-      target_id = attachment.target_id
+  description = "List of policy attachments"
+  value = [
+    for attachment in aws_organizations_policy_attachment.attach : {
+      policy_name = split("-", attachment.id)[0]
+      target_id   = attachment.target_id
+      policy_id   = attachment.policy_id
     }
-  }
+  ]
 }
