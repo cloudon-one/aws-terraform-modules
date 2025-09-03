@@ -102,7 +102,7 @@ variable "requester_aws_assume_role_arn" {
 variable "requester_region" {
   type        = string
   description = "Requester AWS region"
-  default = null
+  default     = null
 }
 
 variable "additional_tag_map" {
@@ -112,30 +112,30 @@ variable "additional_tag_map" {
 }
 
 variable "attributes" {
-  type = list(string)
+  type        = list(string)
   description = "D element. Additional attributes (e.g. `workers` or `cluster`) to add to `id`, in the order they appear in the list. New attributes are appended to the end of the list. The elements of the list are joined by the `delimiter` and treated as a single ID element."
-  default = []
+  default     = []
 }
 
 variable "context" {
   type        = any
   description = "Single object for setting entire context at once. See description of individual variables for details. Leave string and numeric variables as `null` to use default value. Individual variable settings (non-null) override settings in context object, except for attributes, tags, and additional_tag_map, which are merged."
-  default     = {
-    "additional_tag_map": {}, 
-    "attributes": [], 
-    "delimiter": null, 
-    "descriptor_formats": {}, 
-    "enabled": true, "environment": null, 
-    "id_length_limit": null, 
-    "label_key_case": null, 
-    "label_order": [], 
-    "label_value_case": null, 
-    "labels_as_tags": [ "unset" ], 
-    "name": null, 
-    "namespace": null, 
-    "regex_replace_chars": null, 
-    "stage": null, "tags": {}, 
-    "tenant": null
+  default = {
+    "additional_tag_map" : {},
+    "attributes" : [],
+    "delimiter" : null,
+    "descriptor_formats" : {},
+    "enabled" : true, "environment" : null,
+    "id_length_limit" : null,
+    "label_key_case" : null,
+    "label_order" : [],
+    "label_value_case" : null,
+    "labels_as_tags" : ["unset"],
+    "name" : null,
+    "namespace" : null,
+    "regex_replace_chars" : null,
+    "stage" : null, "tags" : {},
+    "tenant" : null
   }
 }
 
@@ -146,9 +146,9 @@ variable "delimiter" {
 }
 
 variable "descriptor_formats" {
-  type = any
+  type        = any
   description = "Describe additional descriptors to be output in the `descriptors` output map. Map of maps. Keys are names of descriptors. Values are maps of the form `{ format = string labels = list(string) }` (Type is `any` so the map values can later be enhanced to provide additional options.) `format` is a Terraform format string to be passed to the `format()` function. `labels` is a list of labels, in order, to pass to `format()` function. Label values will be normalized before being passed to `format()` so they will be identical to how they appear in `id`. Default is `{}` (`descriptors` output will be empty)."
-  default = {}
+  default     = {}
 }
 
 variable "enabled" {
@@ -176,9 +176,9 @@ variable "label_key_case" {
 }
 
 variable "label_order" {
-  type = list(string)
+  type        = list(string)
   description = "Controls the letter case of ID elements (labels) as included in `id`, set as tag values, and output by this module individually. Does not affect values of tags passed in via the `tags` input. Possible values: `lower`, `title`, `upper` and `none` (no transformation). Set this to `title` and set `delimiter` to `` to yield Pascal Case IDs. Default value: `lower`."
-  default = null
+  default     = null
 }
 
 variable "label_value_case" {
@@ -194,21 +194,21 @@ variable "labels_as_tags" {
 }
 
 variable "name" {
-  type = string
+  type        = string
   description = "ID element. Usually the component or solution name, e.g. 'app' or 'jenkins'. This is the only ID element not also included as a `tag`. The name tag is set to the full `id` string. There is no tag with the value of the `name` input."
-  default = null
+  default     = null
 }
 
 variable "namespace" {
-  type = string
+  type        = string
   description = "Usually an abbreviation of your organization name, e.g. 'eg' or 'cp', to help ensure generated IDs are globally unique"
-  default = null
+  default     = null
 }
 
 variable "regex_replace_chars" {
-  type = string
-  description = "Terraform regular expression (regex) string. Characters matching the regex will be removed from the ID elements. If not set, `"/[a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits."
-  default = null
+  type        = string
+  description = "Terraform regular expression (regex) string. Characters matching the regex will be removed from the ID elements. If not set, `" / [a-zA-Z0-9-] / "` is used to remove all characters other than hyphens, letters and digits."
+  default     = null
 }
 
 variable "requester_allow_remote_vpc_dns_resolution" {
@@ -230,49 +230,49 @@ variable "requester_aws_profile" {
 }
 
 variable "requester_aws_secret_key" {
-  type = string
+  type        = string
   description = "Access key id to use in requester account"
-  default = null
+  default     = null
 }
 
 variable "requester_aws_token" {
-  type = string
+  type        = string
   description = "Session token for validating temporary credentials"
-  default = null
+  default     = null
 }
 
 variable "requester_vpc_id" {
-  type = string
+  type        = string
   description = "Requester VPC ID filter"
-  default = ""
+  default     = ""
 }
 
 variable "requester_vpc_tags" {
-  type = map(string)
+  type        = map(string)
   description = "Requester VPC Tags filter"
-  default = {}
+  default     = {}
 }
 
 variable "requester_subnet_tags" {
-  type = map(string)
-    description = "Only add peer routes to requester VPC route tables of subnets matching these tags"
-    default = {}
+  type        = map(string)
+  description = "Only add peer routes to requester VPC route tables of subnets matching these tags"
+  default     = {}
 }
 
 variable "stage" {
-  type = string
+  type        = string
   description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
-  default = null
+  default     = null
 }
 
 variable "tags" {
-  type = map(string)
+  type        = map(string)
   description = "Map of tags to add to the resources"
-  default = {}
+  default     = {}
 }
 
 variable "tenant" {
-  type = string
+  type        = string
   description = "Tenant or client account name, a team or an organization"
-  default = null
+  default     = null
 }

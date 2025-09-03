@@ -17,8 +17,8 @@ resource "aws_api_gateway_resource" "this" {
   for_each = { for idx, resource in flatten([
     for k, v in local.api_gateways : [
       for r in v.resources : {
-        key = "${k}_${r.name}"
-        value = r
+        key    = "${k}_${r.name}"
+        value  = r
         api_id = aws_api_gateway_rest_api.this[k].id
       }
     ]
@@ -34,9 +34,9 @@ resource "aws_api_gateway_method" "this" {
   for_each = { for idx, method in flatten([
     for k, v in local.api_gateways : [
       for m in v.methods : {
-        key = "${k}_${m.name}"
-        value = m
-        api_id = aws_api_gateway_rest_api.this[k].id
+        key         = "${k}_${m.name}"
+        value       = m
+        api_id      = aws_api_gateway_rest_api.this[k].id
         resource_id = aws_api_gateway_resource.this["${k}_${trimprefix(m.resource, "/")}"].id
       }
     ]
@@ -69,7 +69,15 @@ resource "aws_api_gateway_deployment" "this" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.this[each.key].id
-  stage_name  = each.value.stage
+}
+
+# API Gateway stage
+resource "aws_api_gateway_stage" "this" {
+  for_each = local.api_gateways
+
+  deployment_id = aws_api_gateway_deployment.this[each.key].id
+  rest_api_id   = aws_api_gateway_rest_api.this[each.key].id
+  stage_name    = each.value.stage
 }
 
 # API Gateway domain name
@@ -85,7 +93,7 @@ resource "aws_api_gateway_base_path_mapping" "this" {
   for_each = local.api_gateways
 
   api_id      = aws_api_gateway_rest_api.this[each.key].id
-  stage_name  = aws_api_gateway_deployment.this[each.key].stage_name
+  stage_name  = aws_api_gateway_stage.this[each.key].stage_name
   domain_name = aws_api_gateway_domain_name.this[each.key].domain_name
 }
 
@@ -94,9 +102,9 @@ resource "aws_api_gateway_integration" "this" {
   for_each = { for idx, method in flatten([
     for k, v in local.api_gateways : [
       for m in v.methods : {
-        key = "${k}_${m.name}"
-        value = m
-        api_id = aws_api_gateway_rest_api.this[k].id
+        key         = "${k}_${m.name}"
+        value       = m
+        api_id      = aws_api_gateway_rest_api.this[k].id
         resource_id = aws_api_gateway_resource.this["${k}_${trimprefix(m.resource, "/")}"].id
       }
     ]

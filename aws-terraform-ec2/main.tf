@@ -11,6 +11,8 @@ resource "aws_instance" "this" {
 
   root_block_device {
     delete_on_termination = true
+    encrypted             = var.enable_root_block_device_encryption
+    kms_key_id            = var.enable_root_block_device_encryption ? var.kms_key_id : null
   }
 
   lifecycle {
@@ -21,7 +23,9 @@ resource "aws_instance" "this" {
 resource "aws_ebs_volume" "this" {
   count             = sum([for instance in var.instances : length(instance.ebs_block_device)])
   availability_zone = var.instances[index(var.instances.*.name, element(flatten([for i, instance in var.instances : [for j, _ in instance.ebs_block_device : instance.name]]), count.index))].availability_zone
-  size              = 8  # Default size, adjust as needed
+  size              = 8 # Default size, adjust as needed
+  encrypted         = var.enable_ebs_encryption
+  kms_key_id        = var.enable_ebs_encryption ? var.kms_key_id : null
 
   tags = {
     Name = "EBS volume for ${element(flatten([for i, instance in var.instances : [for j, _ in instance.ebs_block_device : instance.name]]), count.index)}"
@@ -30,7 +34,7 @@ resource "aws_ebs_volume" "this" {
 
 resource "aws_volume_attachment" "this" {
   count       = sum([for instance in var.instances : length(instance.ebs_block_device)])
-  device_name = "/dev/sdf"  # Adjust as needed
+  device_name = "/dev/sdf" # Adjust as needed
   volume_id   = aws_ebs_volume.this[count.index].id
   instance_id = aws_instance.this[index(var.instances.*.name, element(flatten([for i, instance in var.instances : [for j, _ in instance.ebs_block_device : instance.name]]), count.index))].id
 }

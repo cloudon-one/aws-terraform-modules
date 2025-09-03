@@ -15,7 +15,7 @@ output "iam_access_key_key_fingerprint" {
 }
 
 output "iam_access_key_secret" {
-  value = module.iam_iam-user.iam_access_key_secret 
+  value = module.iam_iam-user.iam_access_key_secret
 }
 
 output "iam_user_arn" {
@@ -27,5 +27,5 @@ output "iam_user_name" {
 }
 
 output "policy_arns" {
-  value = module.iam_iam-user.policy_arns   
+  value = module.iam_iam-user.policy_arns
 }

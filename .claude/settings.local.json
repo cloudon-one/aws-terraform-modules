@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(terraform version)",
+      "Bash(terraform fmt:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(for dir in aws-terraform-*/)",
+      "Bash(do if [ ! -f \"$dirREADME.md\" ])",
+      "Bash(then echo \"Missing README: $dir\")",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(do if [ ! -f \"$dirversions.tf\" ])",
+      "Bash(then echo \"Missing versions.tf: $dir\")",
+      "Bash(do if [ ! -f \"$diroutputs.tf\" ])",
+      "Bash(then echo \"Missing outputs.tf: $dir\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

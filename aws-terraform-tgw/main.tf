@@ -1,6 +1,6 @@
 module "tgw" {
-  source  = "terraform-aws-modules/transit-gateway/aws"
-  version = "2.12.2"
+  source                                = "terraform-aws-modules/transit-gateway/aws"
+  version                               = "2.12.2"
   name                                  = var.name
   description                           = var.description
   amazon_side_asn                       = var.amazon_side_asn

@@ -19,7 +19,7 @@ resource "aws_db_instance_role_association" "s3_import" {
   for_each = merge([for db in var.rds_instances : {
     for role in lookup(db, "db_instance_role_associations", []) : "${db.identifier}_${role.s3import.ingestion_role}" => {
       db_instance_identifier = db.identifier
-      s3_import             = role.s3import
+      s3_import              = role.s3import
     } if lookup(role, "s3import", null) != null
   }]...)
 
@@ -32,7 +32,7 @@ resource "aws_db_instance_role_association" "s3_export" {
   for_each = merge([for db in var.rds_instances : {
     for role in lookup(db, "db_instance_role_associations", []) : "${db.identifier}_${role.s3export.ingestion_role}" => {
       db_instance_identifier = db.identifier
-      s3_export             = role.s3export
+      s3_export              = role.s3export
     } if lookup(role, "s3export", null) != null
   }]...)
 
