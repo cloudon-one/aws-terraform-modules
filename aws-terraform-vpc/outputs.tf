@@ -36,7 +36,7 @@ output "elasticache_subnets" {
 output "elasticache_subnet_group_name" {
   description = "Name of the elasticache subnet group"
   value       = module.vpc.elasticache_subnet_group_name
-  
+
 }
 
 output "nat_gateway_ids" {
@@ -47,5 +47,5 @@ output "nat_gateway_ids" {
 output "redis_sg_id" {
   description = "ID of the security group"
   value       = aws_vpc_security_group_ingress_rule.allow_redis_ingress.id
-  
+
 }

@@ -6,8 +6,8 @@ variable "acm_certificate_domain_validation_options" {
 
 variable "certificate_transparency_logging_preference" {
   description = "Specifies whether certificate details should be added to a certificate transparency log"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "create_certificate" {
@@ -18,26 +18,26 @@ variable "create_certificate" {
 
 variable "create_route53_records" {
   description = "When validation is set to DNS, define whether to create the DNS records internally via Route53 or externally using any DNS provider"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "create_route53_records_only" {
   description = "Whether to create only Route53 records (e.g. using separate AWS provider)"
-  type = bool
-    default = false
+  type        = bool
+  default     = false
 }
 
 variable "distinct_domain_names" {
   description = "A list of distinct domain names to use for the ACM certificate"
   type        = list(string)
-  default = []
+  default     = []
 }
 
 variable "dns_ttl" {
   description = "The TTL value for the DNS records"
   type        = number
-    default     = 60
+  default     = 60
 }
 
 variable "domain_name" {
@@ -60,8 +60,8 @@ variable "subject_alternative_names" {
 
 variable "tags" {
   description = "value of tags to apply to the ACM certificate"
-    type        = map(string)
-    default     = {}
+  type        = map(string)
+  default     = {}
 }
 
 variable "validate_certificate" {
@@ -91,13 +91,13 @@ variable "validation_option" {
 variable "validation_record_fqdns" {
   description = "A list of FQDNs to use for the DNS validation"
   type        = list(string)
-  default     = []   
+  default     = []
 }
 
 variable "validation_timeout" {
   description = "The maximum time in seconds that you want ACM to wait for your domain validation"
   type        = number
-  default     = null             
+  default     = null
 }
 
 variable "wait_for_validation" {
@@ -108,12 +108,12 @@ variable "wait_for_validation" {
 
 variable "zone_id" {
   description = "The ID of the hosted zone to contain this record. Required when validating via Route53"
-    type        = string
-    default     = ""
+  type        = string
+  default     = ""
 }
 
 variable "zones" {
   description = "value of zones to apply to the ACM certificate"
-    type        = map(string)
-    default     = {}
+  type        = map(string)
+  default     = {}
 }

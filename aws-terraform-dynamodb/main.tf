@@ -5,9 +5,9 @@ locals {
       table = table
     }
     if table.billing_mode == "PROVISIONED" &&
-       table.autoscaling_enabled == true &&
-       table.autoscaling_read != null &&
-       table.autoscaling_write != null
+    table.autoscaling_enabled == true &&
+    table.autoscaling_read != null &&
+    table.autoscaling_write != null
   ]
 }
 

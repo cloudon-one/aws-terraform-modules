@@ -7,5 +7,5 @@ output "api_gateway_urls" {
 
 output "api_gateway_ids" {
   description = "Map of API Gateway IDs"
-  value = { for k, v in aws_api_gateway_rest_api.this : k => v.id }
+  value       = { for k, v in aws_api_gateway_rest_api.this : k => v.id }
 }

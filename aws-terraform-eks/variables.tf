@@ -36,7 +36,19 @@ variable "cluster_additional_security_group_ids" {
 variable "cluster_endpoint_public_access" {
   type        = bool
   description = "Indicates whether or not the Amazon EKS public API server endpoint is enabled"
+  default     = false
+}
+
+variable "cluster_endpoint_private_access" {
+  type        = bool
+  description = "Indicates whether or not the Amazon EKS private API server endpoint is enabled"
   default     = true
+}
+
+variable "cluster_endpoint_public_access_cidrs" {
+  type        = list(string)
+  description = "List of CIDR blocks which can access the Amazon EKS public API server endpoint"
+  default     = ["0.0.0.0/0"]
 }
 
 variable "eks_managed_node_groups" {
@@ -49,10 +61,10 @@ variable "eks_managed_node_groups" {
     ami_type       = string
     capacity_type  = string
     access_entries = list(object({
-      principal          = string
-      kubernetes_groups  = list(string)
+      principal         = string
+      kubernetes_groups = list(string)
     }))
-    tags           = map(string)
+    tags = map(string)
   }))
   description = "List of managed node group configurations"
 }

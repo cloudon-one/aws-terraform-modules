@@ -109,56 +109,56 @@ variable "additional_tag_map" {
   type        = map(string)
   description = "Additional tags for the CloudTrail"
   default     = {}
-  
+
 }
 
 variable "attributes" {
-  type = list(string)
+  type        = list(string)
   description = "ID element. Additional attributes (e.g. `workers` or `cluster`) to add to `id`, in the order they appear in the list. New attributes are appended to the end of the list. The elements of the list are joined by the `delimiter` and treated as a single ID element."
-  default = []
+  default     = []
 }
 
 variable "context" {
-  type = any
+  type        = any
   description = "Single object for setting entire context at once. See description of individual variables for details. Leave string and numeric variables as `null` to use default value. Individual variable settings (non-null) override settings in context object, except for attributes, tags, and additional_tag_map, which are merged"
   default = {
-    "additional_tag_map": {}, 
-    "attributes": [], 
-    "delimiter": null, 
-    "descriptor_formats": {}, 
-    "enabled": true, 
-    "environment": null, 
-    "id_length_limit": null, 
-    "label_key_case": null, 
-    "label_order": [], 
-    "label_value_case": null, 
-    "labels_as_tags": [ "unset" ], 
-    "name": null, "namespace": null, 
-    "regex_replace_chars": null, 
-    "stage": null, "tags": {}, 
-    "tenant": null}
+    "additional_tag_map" : {},
+    "attributes" : [],
+    "delimiter" : null,
+    "descriptor_formats" : {},
+    "enabled" : true,
+    "environment" : null,
+    "id_length_limit" : null,
+    "label_key_case" : null,
+    "label_order" : [],
+    "label_value_case" : null,
+    "labels_as_tags" : ["unset"],
+    "name" : null, "namespace" : null,
+    "regex_replace_chars" : null,
+    "stage" : null, "tags" : {},
+  "tenant" : null }
 }
 
 variable "delimiter" {
-  type = string
+  type        = string
   description = "Delimiter to be used between ID elements. Defaults to `-` (hyphen). Set to  to use no delimiter at all"
-  default = null  
+  default     = null
 }
 
 variable "enabled" {
-  type = bool
+  type        = bool
   description = "Set to false to prevent the module from creating any resources"
-  default = true
+  default     = true
 }
 
 variable "environment" {
-  type = string
+  type        = string
   description = "ID element. Usually used for region e.g. 'uw2', 'us-west-2', OR role 'prod', 'staging', 'dev', 'UAT'"
-  default = ""
+  default     = ""
 }
 
 variable "tags" {
-  type = map(string)
+  type        = map(string)
   description = "A map of tags to add to all resources"
-  default = {}
+  default     = {}
 }

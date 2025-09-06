@@ -12,3 +12,21 @@ variable "instances" {
     tags                        = map(string)
   }))
 }
+
+variable "enable_root_block_device_encryption" {
+  description = "Whether to encrypt the root block device"
+  type        = bool
+  default     = true
+}
+
+variable "enable_ebs_encryption" {
+  description = "Whether to encrypt EBS volumes"
+  type        = bool
+  default     = true
+}
+
+variable "kms_key_id" {
+  description = "KMS key ID to use for encryption (leave empty to use AWS managed key)"
+  type        = string
+  default     = null
+}

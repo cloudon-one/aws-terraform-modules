@@ -26,24 +26,24 @@ variable "authorizer_name" {
 variable "inputs" {
   description = "List of API Gateway configurations"
   type = list(object({
-    name                   = string
-    description            = string
-    stage                  = string
-    domain_name            = string
+    name        = string
+    description = string
+    stage       = string
+    domain_name = string
     endpoint_configuration = object({
-      type                 = list(string)
-      acm_certificate_arn  = string
+      type                = list(string)
+      acm_certificate_arn = string
     })
-    tags                   = map(string)
+    tags = map(string)
     resources = list(object({
-      name                 = string
-      parent_id            = string
+      name      = string
+      parent_id = string
     }))
     methods = list(object({
-      name                 = string
-      resource             = string
-      http_method          = string
-      request_template     = string
+      name             = string
+      resource         = string
+      http_method      = string
+      request_template = string
     }))
   }))
 }
