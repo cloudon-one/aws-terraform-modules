@@ -5,11 +5,14 @@ variable "instances" {
     ami                         = string
     availability_zone           = string
     private_ip                  = string
-    associate_public_ip_address = string
+    associate_public_ip_address = optional(bool, false)
     subnet_id                   = string
     instance_type               = string
-    ebs_block_device            = list(string)
-    tags                        = map(string)
+    ebs_block_device = optional(list(object({
+      device_name = string
+      volume_size = number
+    })), [])
+    tags = map(string)
   }))
 }
 

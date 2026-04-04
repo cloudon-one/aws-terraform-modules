@@ -63,7 +63,18 @@ For a complete list of supported variables, please refer to the [variables.tf](h
 
 ## Outputs
 
-This module doesn't define any outputs directly. However, you can access all outputs from the underlying `terraform-aws-modules/vpn-gateway/aws` module. Refer to the [official module documentation](https://registry.terraform.io/modules/terraform-aws-modules/vpn-gateway/aws/latest?tab=outputs) for a list of available outputs.
+| Name | Description |
+|------|-------------|
+| vpn_connection_id | The ID of the VPN connection |
+| vpn_connection_tunnel1_address | The public IP address of the first VPN tunnel |
+| vpn_connection_tunnel1_cgw_inside_address | The link-local address of the first VPN tunnel (customer gateway side) |
+| vpn_connection_tunnel1_vgw_inside_address | The link-local address of the first VPN tunnel (VPN gateway side) |
+| vpn_connection_tunnel2_address | The public IP address of the second VPN tunnel |
+| vpn_connection_tunnel2_cgw_inside_address | The link-local address of the second VPN tunnel (customer gateway side) |
+| vpn_connection_tunnel2_vgw_inside_address | The link-local address of the second VPN tunnel (VPN gateway side) |
+| vpn_connection_transit_gateway_attachment_id | The ID of the transit gateway attachment for the VPN connection |
+
+Note: `tunnel1_preshared_key`, `tunnel2_preshared_key`, and `vpn_connection_customer_gateway_configuration` are also available as sensitive outputs.
 
 ## Notes
 

@@ -13,11 +13,6 @@ variable "sqs_role_arn" {
   type        = string
 }
 
-variable "acm_certificate_arn" {
-  description = "ARN of the ACM certificate"
-  type        = string
-}
-
 variable "authorizer_name" {
   description = "Name of the Lambda authorizer"
   type        = string

@@ -62,7 +62,7 @@ module "cloudtrail_s3_bucket" {
 | include_global_service_events | Specifies whether the trail is publishing events from global services such as IAM to the log files | `bool` | `true` | no |
 | insight_selector | Specifies an insight selector for identifying unusual operational activity | `any` | `[]` | no |
 | is_multi_region_trail | Specifies whether the trail is created in the current region or in all regions | `bool` | `true` | no |
-| is_organization_trail | Specifies whether the trail is an AWS Organizations trail | `bool` | `false` | no |
+| is_organization_trail | Specifies whether the trail is an AWS Organizations trail | `bool` | `true` | no |
 | kms_key_arn | Specifies the KMS key ARN to use to encrypt the logs delivered by CloudTrail | `string` | `""` | no |
 | s3_key_prefix | Specifies the S3 key prefix that precedes the name of the bucket you have designated for log file delivery | `string` | `""` | no |
 | sns_topic_name | Specifies the name of the Amazon SNS topic defined for notification of log file delivery | `string` | `null` | no |

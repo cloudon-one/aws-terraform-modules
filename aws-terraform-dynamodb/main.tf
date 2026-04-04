@@ -15,8 +15,8 @@ resource "aws_dynamodb_table" "this" {
   count          = length(var.dynamodb_tables)
   name           = var.dynamodb_tables[count.index].name
   billing_mode   = var.dynamodb_tables[count.index].billing_mode
-  read_capacity  = var.dynamodb_tables[count.index].billing_mode == "PROVISIONED" ? tonumber(var.dynamodb_tables[count.index].read_capacity) : null
-  write_capacity = var.dynamodb_tables[count.index].billing_mode == "PROVISIONED" ? tonumber(var.dynamodb_tables[count.index].write_capacity) : null
+  read_capacity  = var.dynamodb_tables[count.index].billing_mode == "PROVISIONED" ? var.dynamodb_tables[count.index].read_capacity : null
+  write_capacity = var.dynamodb_tables[count.index].billing_mode == "PROVISIONED" ? var.dynamodb_tables[count.index].write_capacity : null
   hash_key       = "id"
 
   attribute {
@@ -31,8 +31,8 @@ resource "aws_dynamodb_table" "this" {
 
 resource "aws_appautoscaling_target" "read_target" {
   count              = length(local.autoscaling_tables)
-  max_capacity       = tonumber(local.autoscaling_tables[count.index].table.autoscaling_read.max_capacity)
-  min_capacity       = tonumber(local.autoscaling_tables[count.index].table.autoscaling_read.min_capacity)
+  max_capacity       = local.autoscaling_tables[count.index].table.autoscaling_read.max_capacity
+  min_capacity       = local.autoscaling_tables[count.index].table.autoscaling_read.min_capacity
   resource_id        = "table/${aws_dynamodb_table.this[local.autoscaling_tables[count.index].index].name}"
   scalable_dimension = "dynamodb:table:ReadCapacityUnits"
   service_namespace  = "dynamodb"
@@ -56,8 +56,8 @@ resource "aws_appautoscaling_policy" "read_policy" {
 
 resource "aws_appautoscaling_target" "write_target" {
   count              = length(local.autoscaling_tables)
-  max_capacity       = tonumber(local.autoscaling_tables[count.index].table.autoscaling_write.max_capacity)
-  min_capacity       = tonumber(local.autoscaling_tables[count.index].table.autoscaling_write.min_capacity)
+  max_capacity       = local.autoscaling_tables[count.index].table.autoscaling_write.max_capacity
+  min_capacity       = local.autoscaling_tables[count.index].table.autoscaling_write.min_capacity
   resource_id        = "table/${aws_dynamodb_table.this[local.autoscaling_tables[count.index].index].name}"
   scalable_dimension = "dynamodb:table:WriteCapacityUnits"
   service_namespace  = "dynamodb"

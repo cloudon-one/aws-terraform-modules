@@ -63,11 +63,22 @@ module "vpc" {
 
 ## Outputs
 
-This module doesn't define any outputs directly. However, you can access all outputs from the underlying `terraform-aws-modules/vpc/aws` module. Refer to the [official module documentation](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest?tab=outputs) for a list of available outputs.
+| Name | Description |
+|------|-------------|
+| vpc_id | ID of the VPC |
+| vpc_arn | ARN of the VPC |
+| private_subnets | List of IDs of private subnets |
+| public_subnets | List of IDs of public subnets |
+| intra_subnets | List of IDs of intra subnets |
+| database_subnets | List of IDs of database subnets |
+| elasticache_subnets | List of IDs of elasticache subnets |
+| elasticache_subnet_group_name | Name of the elasticache subnet group |
+| nat_gateway_ids | List of NAT Gateway IDs |
+| redis_sg_id | ID of the Redis ingress security group |
 
 ## Notes
 
-1. This module uses the `terraform-aws-modules/vpc/aws` module version 5.13.0. Make sure this version is compatible with your Terraform version.
+1. This module uses the `terraform-aws-modules/vpc/aws` module version 5.15.0. Make sure this version is compatible with your Terraform version.
 2. The number of subnets created will match the number of Availability Zones specified, for each subnet type.
 3. If `enable_nat_gateway` is set to `true`, a NAT gateway will be created in each public subnet for use by private subnets.
 4. Intra subnets are private subnets with no internet routing.

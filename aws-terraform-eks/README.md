@@ -111,7 +111,13 @@ Each object in the `clusters` list should have the following structure:
 
 ## Outputs
 
-This module doesn't define any outputs. Consider adding outputs for cluster endpoints, certificate authorities, or other relevant information if needed for your use case.
+| Name | Description |
+|------|-------------|
+| cluster_id | The name/id of the EKS cluster |
+| cluster_arn | The Amazon Resource Name (ARN) of the cluster |
+| cluster_endpoint | The endpoint for your EKS Kubernetes API |
+| cluster_security_group_id | Security group ID attached to the EKS cluster |
+| node_security_group_id | Security group ID attached to the EKS nodes |
 
 ## License
 

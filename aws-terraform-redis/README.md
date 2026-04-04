@@ -58,7 +58,11 @@ module "redis_cluster" {
 
 ## Outputs
 
-This module doesn't define any outputs. Consider adding outputs for the cluster address, cache nodes, or other relevant information if needed for your use case.
+| Name | Description |
+|------|-------------|
+| cluster_id | The ID of the ElastiCache cluster |
+| cluster_address | The DNS name of the cache cluster without the port appended |
+| cluster_port | The port number on which the cache accepts connections |
 
 ## License
 

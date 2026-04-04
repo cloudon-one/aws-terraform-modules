@@ -5,7 +5,7 @@ resource "aws_instance" "this" {
   availability_zone           = var.instances[count.index].availability_zone
   subnet_id                   = var.instances[count.index].subnet_id
   private_ip                  = var.instances[count.index].private_ip
-  associate_public_ip_address = var.instances[count.index].associate_public_ip_address != "null"
+  associate_public_ip_address = var.instances[count.index].associate_public_ip_address
 
   tags = var.instances[count.index].tags
 
@@ -20,21 +20,35 @@ resource "aws_instance" "this" {
   }
 }
 
+locals {
+  ebs_devices = flatten([
+    for i, instance in var.instances : [
+      for j, ebs in instance.ebs_block_device : {
+        instance_index = i
+        instance_name  = instance.name
+        device_name    = ebs.device_name
+        volume_size    = ebs.volume_size
+        az             = instance.availability_zone
+      }
+    ]
+  ])
+}
+
 resource "aws_ebs_volume" "this" {
-  count             = sum([for instance in var.instances : length(instance.ebs_block_device)])
-  availability_zone = var.instances[index(var.instances.*.name, element(flatten([for i, instance in var.instances : [for j, _ in instance.ebs_block_device : instance.name]]), count.index))].availability_zone
-  size              = 8 # Default size, adjust as needed
+  count             = length(local.ebs_devices)
+  availability_zone = local.ebs_devices[count.index].az
+  size              = local.ebs_devices[count.index].volume_size
   encrypted         = var.enable_ebs_encryption
   kms_key_id        = var.enable_ebs_encryption ? var.kms_key_id : null
 
   tags = {
-    Name = "EBS volume for ${element(flatten([for i, instance in var.instances : [for j, _ in instance.ebs_block_device : instance.name]]), count.index)}"
+    Name = "EBS volume for ${local.ebs_devices[count.index].instance_name}"
   }
 }
 
 resource "aws_volume_attachment" "this" {
-  count       = sum([for instance in var.instances : length(instance.ebs_block_device)])
-  device_name = "/dev/sdf" # Adjust as needed
+  count       = length(local.ebs_devices)
+  device_name = local.ebs_devices[count.index].device_name
   volume_id   = aws_ebs_volume.this[count.index].id
-  instance_id = aws_instance.this[index(var.instances.*.name, element(flatten([for i, instance in var.instances : [for j, _ in instance.ebs_block_device : instance.name]]), count.index))].id
+  instance_id = aws_instance.this[local.ebs_devices[count.index].instance_index].id
 }

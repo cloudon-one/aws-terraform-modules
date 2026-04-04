@@ -33,3 +33,27 @@ variable "subnet_ids" {
   description = "List of subnet IDs to create the subnet group"
   type        = list(string)
 }
+
+variable "num_cache_nodes" {
+  description = "The number of cache nodes in the cluster"
+  type        = number
+  default     = 1
+}
+
+variable "parameter_group_name" {
+  description = "The name of the parameter group to associate with this cache cluster"
+  type        = string
+  default     = "default.redis7"
+}
+
+variable "port" {
+  description = "The port number on which the cache accepts connections"
+  type        = number
+  default     = 6379
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
+}

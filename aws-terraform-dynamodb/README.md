@@ -87,7 +87,10 @@ Each object in the `dynamodb_tables` list should have the following structure:
 
 ## Outputs
 
-This module doesn't define any outputs. Consider adding outputs for table ARNs or names if needed for your use case.
+| Name | Description |
+|------|-------------|
+| table_arns | ARNs of the DynamoDB tables |
+| table_names | Names of the DynamoDB tables |
 
 ## License
 

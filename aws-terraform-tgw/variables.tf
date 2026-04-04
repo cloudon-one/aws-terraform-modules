@@ -22,7 +22,7 @@ variable "enable_auto_accept_shared_attachments" {
 }
 
 variable "vpc_attachments" {
-  description = "Maps of maps of VPC details to attach to TGW"
+  description = "Maps of maps of VPC details to attach to TGW. Each key is a VPC attachment name, value requires vpc_id (string) and subnet_ids (list of strings). Optional: dns_support, ipv6_support, transit_gateway_default_route_table_association, transit_gateway_default_route_table_propagation, tgw_routes (list of objects with destination_cidr_block)."
   type        = any
   default     = {}
 }

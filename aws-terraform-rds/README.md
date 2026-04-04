@@ -102,7 +102,11 @@ Each object in the `rds_instances` list should have the following structure:
 
 ## Outputs
 
-This module doesn't define any outputs. Consider adding outputs for the RDS instance IDs, endpoints, or other relevant information if needed for your use case.
+| Name | Description |
+|------|-------------|
+| db_instance_ids | The IDs of the RDS instances |
+| db_instance_arns | The ARNs of the RDS instances |
+| db_instance_endpoints | The connection endpoints of the RDS instances |
 
 ## License
 

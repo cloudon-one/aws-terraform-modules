@@ -87,7 +87,10 @@ Each object in the `buckets` list should have the following structure:
 
 ## Outputs
 
-This module doesn't define any outputs. Consider adding outputs for the bucket ARNs, names, or other relevant information if needed for your use case.
+| Name | Description |
+|------|-------------|
+| bucket_ids | List of bucket IDs |
+| bucket_arns | List of bucket ARNs |
 
 ## License
 

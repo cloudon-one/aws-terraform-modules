@@ -65,7 +65,7 @@ module "tgw" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | name | Name to be used on all the resources as identifier | `string` | n/a | yes |
-| description | Description of the Transit Gateway | `string` | `"My TGW shared with several other AWS accounts"` | no |
+| description | Description of the Transit Gateway | `string` | `"Managed by Terraform"` | no |
 | amazon_side_asn | The Autonomous System Number (ASN) for the Amazon side of the gateway | `number` | `64532` | no |
 | enable_auto_accept_shared_attachments | Whether resource attachment requests are automatically accepted | `bool` | `true` | no |
 | vpc_attachments | Maps of maps of VPC details to attach to TGW | `any` | `{}` | no |

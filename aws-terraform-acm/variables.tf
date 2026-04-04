@@ -80,6 +80,11 @@ variable "validation_method" {
   description = "Which method to use for validation. DNS or EMAIL are valid. This parameter must not be set for certificates that were imported into ACM and then into Terraform"
   type        = string
   default     = "DNS"
+
+  validation {
+    condition     = contains(["DNS", "EMAIL", "NONE"], var.validation_method)
+    error_message = "The validation_method must be one of: DNS, EMAIL, NONE."
+  }
 }
 
 variable "validation_option" {

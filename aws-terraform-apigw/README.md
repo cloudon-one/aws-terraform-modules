@@ -121,7 +121,10 @@ The `api_gateways` object should contain the following structure for each API:
 
 ## Outputs
 
-This module doesn't define any outputs. Consider adding outputs for important resource IDs or ARNs if needed for your use case.
+| Name | Description |
+|------|-------------|
+| api_gateway_urls | Map of API Gateway URLs |
+| api_gateway_ids | Map of API Gateway IDs |
 
 ## License
 

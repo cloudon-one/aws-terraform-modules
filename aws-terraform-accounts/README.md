@@ -60,7 +60,10 @@ module "aws_organization" {
 
 ## Outputs
 
-This module doesn't define any outputs. You may want to add outputs based on your specific needs.
+| Name | Description |
+|------|-------------|
+| organizational_units | The created organizational units |
+| accounts | The created AWS accounts |
 
 ## Notes
 

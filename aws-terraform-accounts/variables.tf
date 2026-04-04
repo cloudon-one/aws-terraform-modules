@@ -1,8 +1,3 @@
-variable "org_id" {
-  type        = string
-  description = "The ID of the AWS Organization"
-}
-
 variable "org_units" {
   type = list(object({
     name      = string

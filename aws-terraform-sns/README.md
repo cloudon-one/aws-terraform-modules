@@ -89,7 +89,10 @@ The `id` field is used as the endpoint for the subscription. Its format depends 
 
 ## Outputs
 
-This module doesn't define any outputs. Consider adding outputs for the topic ARNs or other relevant information if needed for your use case.
+| Name | Description |
+|------|-------------|
+| topic_arns | ARNs of the created SNS topics |
+| subscription_arns | ARNs of the created SNS subscriptions |
 
 ## License
 

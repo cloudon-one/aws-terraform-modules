@@ -45,7 +45,7 @@ module "acm" {
 | distinct_domain_names | Distinct domain names for the certificate | `list(string)` | `[]` | no |
 | dns_ttl | The TTL of DNS recursive resolvers to cache information about this record | `number` | `60` | no |
 | domain_name | Domain name for the ACM certificate | `string` | `""` | yes |
-| key_algorithm | Algorithm of the public and private key pair | `string` | `"RSA_2048"` | no |
+| key_algorithm | Algorithm of the public and private key pair | `string` | `null` | no |
 | subject_alternative_names | Subject alternative names for the ACM certificate | `list(string)` | `[]` | no |
 | tags | Tags to apply to the ACM certificate | `map(string)` | `{}` | no |
 | validate_certificate | Whether to validate the certificate | `bool` | `true` | no |
@@ -53,7 +53,7 @@ module "acm" {
 | validation_method | Which method to use for validation, DNS or EMAIL | `string` | `"DNS"` | no |
 | validation_option | The domain name that you want ACM to use to send you validation emails | `any` | `{}` | no |
 | validation_record_fqdns | List of FQDNs that implement the validation | `list(string)` | `[]` | no |
-| validation_timeout | Duration to wait for validation to complete | `string` | `"45m"` | no |
+| validation_timeout | Duration to wait for validation to complete | `number` | `null` | no |
 | wait_for_validation | Whether to wait for the validation to complete | `bool` | `true` | no |
 | zone_id | The ID of the hosted zone to contain the validationrecords | `string` | `""` | no |
 | zones | List of route53 zone objects | `any` | `{}` | no |

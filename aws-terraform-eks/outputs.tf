@@ -20,5 +20,5 @@ output "cluster_security_group_id" {
 
 output "node_security_group_id" {
   description = "Security group ID attached to the EKS nodes"
-  value       = var.node_security_group_name
+  value       = try(aws_eks_node_group.this[0].resources[0].remote_access_security_group_id, null)
 }

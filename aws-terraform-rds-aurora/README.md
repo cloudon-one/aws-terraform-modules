@@ -98,7 +98,11 @@ Each object in the `aurora_clusters` list should have the following structure:
 
 ## Outputs
 
-This module doesn't define any outputs. Consider adding outputs for the Aurora cluster endpoints, reader endpoints, or other relevant information if needed for your use case.
+| Name | Description |
+|------|-------------|
+| cluster_identifiers | The identifiers of the Aurora clusters |
+| cluster_endpoints | The endpoints of the Aurora clusters |
+| cluster_reader_endpoints | The reader endpoints of the Aurora clusters |
 
 ## License
 

@@ -18,7 +18,7 @@ resource "aws_eks_node_group" "this" {
   count           = length(var.eks_managed_node_groups)
   cluster_name    = aws_eks_cluster.this.name
   node_group_name = var.eks_managed_node_groups[count.index].name
-  node_role_arn   = var.iam_role_arn
+  node_role_arn   = coalesce(var.node_role_arn, var.iam_role_arn)
   subnet_ids      = var.subnet_ids
 
   scaling_config {
@@ -45,19 +45,21 @@ resource "kubernetes_config_map_v1_data" "aws_auth" {
       concat(
         [
           {
-            rolearn  = var.iam_role_arn
+            rolearn  = coalesce(var.node_role_arn, var.iam_role_arn)
             username = "system:node:{{EC2PrivateDNSName}}"
             groups   = ["system:bootstrappers", "system:nodes"]
           }
         ],
-        [
-          for access_entry in var.eks_managed_node_groups[0].access_entries :
-          {
-            rolearn  = access_entry.principal
-            username = "admin:{{SessionName}}"
-            groups   = access_entry.kubernetes_groups
-          }
-        ]
+        flatten([
+          for ng in var.eks_managed_node_groups : [
+            for access_entry in ng.access_entries :
+            {
+              rolearn  = access_entry.principal
+              username = "admin:{{SessionName}}"
+              groups   = access_entry.kubernetes_groups
+            }
+          ]
+        ])
       )
     )
   }

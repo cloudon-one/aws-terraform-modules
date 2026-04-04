@@ -99,7 +99,11 @@ Each object in the `instances` list should have the following structure:
 
 ## Outputs
 
-This module doesn't define any outputs. Consider adding outputs for instance IDs, public IPs, or other relevant information if needed for your use case.
+| Name | Description |
+|------|-------------|
+| instance_ids | IDs of the created EC2 instances |
+| public_ips | Public IPs of the created EC2 instances |
+| private_ips | Private IPs of the created EC2 instances |
 
 ## License
 

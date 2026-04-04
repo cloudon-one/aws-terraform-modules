@@ -25,9 +25,10 @@ module "cloudtrail" {
 }
 
 module "cloudtrail_s3_bucket" {
-  source = "cloudposse/cloudtrail-s3-bucket/aws"
+  source  = "cloudposse/cloudtrail-s3-bucket/aws"
+  version = "0.26.0"
 
-  force_destroy            = true
+  force_destroy            = false
   create_access_log_bucket = true
 
   context = module.this.context

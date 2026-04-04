@@ -4,6 +4,12 @@ variable "name_prefix" {
   default     = ""
 }
 
+variable "kms_key_id" {
+  description = "KMS key ID to use for server-side encryption. If null, AES256 encryption is used."
+  type        = string
+  default     = null
+}
+
 variable "buckets" {
   description = "List of bucket configurations"
   type = list(object({

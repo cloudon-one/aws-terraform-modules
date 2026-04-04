@@ -8,11 +8,6 @@ variable "eks_version" {
   description = "Kubernetes version"
 }
 
-variable "vpc_id" {
-  type        = string
-  description = "VPC ID where the cluster and workers will be deployed"
-}
-
 variable "subnet_ids" {
   type        = list(string)
   description = "A list of subnet IDs where the nodes/node groups will be provisioned"
@@ -20,12 +15,23 @@ variable "subnet_ids" {
 
 variable "iam_role_arn" {
   type        = string
-  description = "IAM role ARN for the cluster"
+  description = "IAM role ARN for the EKS cluster control plane"
+
+  validation {
+    condition     = can(regex("^arn:aws:iam::[0-9]{12}:role/", var.iam_role_arn))
+    error_message = "The iam_role_arn must be a valid IAM role ARN."
+  }
 }
 
-variable "node_security_group_name" {
+variable "node_role_arn" {
   type        = string
-  description = "Name of the node security group"
+  description = "IAM role ARN for the EKS managed node groups"
+  default     = null
+
+  validation {
+    condition     = var.node_role_arn == null || can(regex("^arn:aws:iam::[0-9]{12}:role/", var.node_role_arn))
+    error_message = "The node_role_arn must be a valid IAM role ARN."
+  }
 }
 
 variable "cluster_additional_security_group_ids" {
