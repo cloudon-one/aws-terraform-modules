@@ -126,7 +126,7 @@ module "secure_eks" {
   source = "./aws-terraform-eks"
   
   cluster_name    = "production-cluster"
-  eks_version     = "1.27"
+  eks_version     = "1.34"
   iam_role_arn    = "arn:aws:iam::123456789012:role/eks-cluster-role"
   subnet_ids      = ["subnet-12345678", "subnet-87654321"]
   
@@ -188,7 +188,7 @@ module "secure_iam_user" {
 This repository implements **security-by-default** principles:
 
 ### ✅ What's Secure by Default
-- **EC2 Encryption**: Root and EBS volumes encrypted automatically
+- **EC2 Encryption**: Root and EBS volumes are encrypted automatically
 - **EKS Private Access**: API endpoints private by default
 - **IAM Security**: No access keys created by default
 - **Version Pinning**: All provider versions constrained
